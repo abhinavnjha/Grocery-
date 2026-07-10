@@ -1,0 +1,65 @@
+{% extends "store/base.html" %}
+{% block content %}
+
+<section class="hero">
+  <div class="hero-text">
+    <span class="eyebrow">🚚 Delivered in 30 minutes</span>
+    <h1>Fresh groceries,<br>just a tap away.</h1>
+    <p>Pick a picture, add it to your basket, and we'll bring it home. No typing needed — anyone in the family can shop.</p>
+    <a href="{% url 'shop' %}" class="btn btn-primary btn-lg">Start Shopping 🛍️</a>
+  </div>
+  <div class="hero-art" aria-hidden="true">
+    <span class="float-emoji e1">🍅</span>
+    <span class="float-emoji e2">🥦</span>
+    <span class="float-emoji e3">🍞</span>
+    <span class="float-emoji e4">🥛</span>
+    <span class="float-emoji e5">🍌</span>
+    <span class="float-emoji e6">🧴</span>
+  </div>
+</section>
+
+<section class="section">
+  <h2 class="section-title">Shop by Category</h2>
+  <div class="category-grid">
+    {% for cat in categories %}
+    <a href="{% url 'shop' %}?category={{ cat.slug }}" class="category-card">
+      {% if cat.image_url %}
+        <div class="category-card-bg" style="background-image:url('{{ cat.image_url }}')"></div>
+      {% endif %}
+      <div class="category-card-body">
+        <span class="category-icon">{{ cat.icon }}</span>
+        <span class="category-name">{{ cat.name }}</span>
+      </div>
+    </a>
+    {% endfor %}
+  </div>
+</section>
+
+{% if featured %}
+<section class="section">
+  <h2 class="section-title">⭐ Today's Best Picks</h2>
+  <div class="product-grid">
+    {% for product in featured %}
+      {% include "store/_product_card.html" %}
+    {% endfor %}
+  </div>
+</section>
+{% endif %}
+
+<section class="section">
+  <h2 class="section-title">🆕 New In Store</h2>
+  <div class="product-grid">
+    {% for product in new_arrivals %}
+      {% include "store/_product_card.html" %}
+    {% endfor %}
+  </div>
+</section>
+
+<section class="trust-strip">
+  <div class="trust-item"><span>🚚</span><p>Fast delivery</p></div>
+  <div class="trust-item"><span>💰</span><p>Cash on delivery</p></div>
+  <div class="trust-item"><span>✅</span><p>Fresh quality</p></div>
+  <div class="trust-item"><span>↩️</span><p>Easy returns</p></div>
+</section>
+
+{% endblock %}

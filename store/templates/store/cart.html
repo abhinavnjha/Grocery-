@@ -1,0 +1,52 @@
+{% extends "store/base.html" %}
+{% block content %}
+<div class="cart-page">
+  <h1 class="page-title">🛒 Your Basket</h1>
+
+  {% if cart|length > 0 %}
+  <div class="cart-table">
+    {% for item in cart %}
+    <div class="cart-row">
+      <div class="cart-row-img">
+        {% if item.product.image %}
+          <img src="{{ item.product.image.url }}" alt="{{ item.product.name }}">
+        {% else %}
+          <span>{{ item.product.emoji }}</span>
+        {% endif %}
+      </div>
+      <div class="cart-row-info">
+        <a href="{% url 'product_detail' item.product.slug %}">{{ item.product.name }}</a>
+        <span class="muted">₹{{ item.product.price }} {{ item.product.get_unit_display }}</span>
+      </div>
+      <form action="{% url 'cart_update' item.product.id %}" method="post" class="cart-row-qty">
+        {% csrf_token %}
+        <input type="number" name="quantity" value="{{ item.quantity }}" min="1" onchange="this.form.submit()">
+      </form>
+      <div class="cart-row-subtotal">₹{{ item.subtotal }}</div>
+      <form action="{% url 'cart_remove' item.product.id %}" method="post">
+        {% csrf_token %}
+        <button type="submit" class="remove-btn" aria-label="Remove">🗑️</button>
+      </form>
+    </div>
+    {% endfor %}
+  </div>
+
+  <div class="cart-summary">
+    <div class="cart-total-row">
+      <span>Total</span>
+      <strong>₹{{ cart.get_total }}</strong>
+    </div>
+    <a href="{% url 'shop' %}" class="btn btn-ghost">← Add more items</a>
+    <a href="{% url 'checkout' %}" class="btn btn-primary btn-lg">Proceed to Checkout →</a>
+  </div>
+
+  {% else %}
+  <div class="empty-state">
+    <span>🛒</span>
+    <h3>Your basket is empty</h3>
+    <p>Go ahead and add something tasty.</p>
+    <a href="{% url 'shop' %}" class="btn btn-primary">Start Shopping</a>
+  </div>
+  {% endif %}
+</div>
+{% endblock %}

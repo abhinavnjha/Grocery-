@@ -1,0 +1,51 @@
+{% extends "store/base.html" %}
+{% block content %}
+<div class="shop-wrap">
+
+  <aside class="filters">
+    <h3>Categories</h3>
+    <a href="{% url 'shop' %}" class="filter-link {% if not active_category %}active{% endif %}">🛒 All Products</a>
+    {% for cat in categories %}
+      <a href="?category={{ cat.slug }}{% if query %}&q={{ query }}{% endif %}"
+         class="filter-link {% if active_category == cat.slug %}active{% endif %}">
+        {{ cat.icon }} {{ cat.name }}
+      </a>
+    {% endfor %}
+  </aside>
+
+  <div class="shop-main">
+    <div class="shop-toolbar">
+      <h1 class="page-title">
+        {% if query %}Results for "{{ query }}"{% else %}All Products{% endif %}
+        <span class="count">({{ products|length }})</span>
+      </h1>
+      <form method="get" class="sort-form">
+        {% if query %}<input type="hidden" name="q" value="{{ query }}">{% endif %}
+        {% if active_category %}<input type="hidden" name="category" value="{{ active_category }}">{% endif %}
+        <label for="sort">Sort:</label>
+        <select name="sort" id="sort" onchange="this.form.submit()">
+          <option value="">Most Relevant</option>
+          <option value="price_low" {% if sort == "price_low" %}selected{% endif %}>Price: Low to High</option>
+          <option value="price_high" {% if sort == "price_high" %}selected{% endif %}>Price: High to Low</option>
+          <option value="name" {% if sort == "name" %}selected{% endif %}>Name: A to Z</option>
+        </select>
+      </form>
+    </div>
+
+    {% if products %}
+    <div class="product-grid">
+      {% for product in products %}
+        {% include "store/_product_card.html" %}
+      {% endfor %}
+    </div>
+    {% else %}
+    <div class="empty-state">
+      <span>🔍</span>
+      <h3>No products found</h3>
+      <p>Try a different search word or pick a category from the left.</p>
+      <a href="{% url 'shop' %}" class="btn btn-primary">See All Products</a>
+    </div>
+    {% endif %}
+  </div>
+</div>
+{% endblock %}

@@ -1,0 +1,67 @@
+{% extends "store/base.html" %}
+{% block content %}
+<div class="product-detail">
+  <div class="pd-image">
+    {% if product.photo %}
+      <img src="{{ product.photo }}" alt="{{ product.name }}">
+    {% else %}
+      <span class="pd-emoji">{{ product.emoji }}</span>
+    {% endif %}
+    {% if product.discount_percent %}<span class="badge-discount big">-{{ product.discount_percent }}% OFF</span>{% endif %}
+  </div>
+
+  <div class="pd-info">
+    <span class="pd-category">{{ product.category.icon }} {{ product.category.name }}</span>
+    <h1>{{ product.name }}</h1>
+    <p class="pd-unit">Sold {{ product.get_unit_display }}</p>
+
+    <div class="pd-price">
+      <strong>₹{{ product.price }}</strong>
+      {% if product.old_price %}<s>₹{{ product.old_price }}</s>{% endif %}
+    </div>
+
+    {% if product.in_stock %}
+      <span class="stock-pill in">✅ In Stock</span>
+    {% else %}
+      <span class="stock-pill out">❌ Out of Stock</span>
+    {% endif %}
+
+    {% if product.description %}<p class="pd-desc">{{ product.description }}</p>{% endif %}
+
+    <form action="{% url 'cart_add' product.id %}" method="post" class="pd-add-form">
+      {% csrf_token %}
+      <input type="hidden" name="next" value="{{ request.get_full_path }}">
+      <div class="stepper">
+        <button type="button" class="step-btn" onclick="stepQty(-1)">−</button>
+        <input type="number" name="quantity" id="qtyInput" value="1" min="1" readonly>
+        <button type="button" class="step-btn" onclick="stepQty(1)">+</button>
+      </div>
+      <button type="submit" class="btn btn-primary btn-lg" {% if not product.in_stock %}disabled{% endif %}>
+        🛒 Add to Basket
+      </button>
+    </form>
+  </div>
+</div>
+
+{% if related %}
+<section class="section">
+  <h2 class="section-title">You may also like</h2>
+  <div class="product-grid">
+    {% for product in related %}
+      {% include "store/_product_card.html" %}
+    {% endfor %}
+  </div>
+</section>
+{% endif %}
+{% endblock %}
+
+{% block extra_js %}
+<script>
+function stepQty(delta){
+  const input = document.getElementById('qtyInput');
+  let val = parseInt(input.value || "1") + delta;
+  if (val < 1) val = 1;
+  input.value = val;
+}
+</script>
+{% endblock %}

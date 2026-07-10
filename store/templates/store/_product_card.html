@@ -1,0 +1,26 @@
+<div class="product-card">
+  {% if product.discount_percent %}<span class="badge-discount">-{{ product.discount_percent }}%</span>{% endif %}
+  <a href="{% url 'product_detail' product.slug %}" class="product-thumb">
+    {% if product.photo %}
+      <img src="{{ product.photo }}" alt="{{ product.name }}" loading="lazy">
+    {% else %}
+      <span class="product-emoji">{{ product.emoji }}</span>
+    {% endif %}
+  </a>
+  <a href="{% url 'product_detail' product.slug %}" class="product-name">{{ product.name }}</a>
+  <span class="product-unit">{{ product.get_unit_display }}</span>
+  <div class="product-bottom">
+    <div class="product-price">
+      <strong>₹{{ product.price }}</strong>
+      {% if product.old_price %}<s>₹{{ product.old_price }}</s>{% endif %}
+    </div>
+    <form action="{% url 'cart_add' product.id %}" method="post" class="add-form">
+      {% csrf_token %}
+      <input type="hidden" name="quantity" value="1">
+      <input type="hidden" name="next" value="{{ request.get_full_path }}">
+      <button type="submit" class="btn-add" {% if not product.in_stock %}disabled{% endif %}>
+        {% if product.in_stock %}+ Add{% else %}Out{% endif %}
+      </button>
+    </form>
+  </div>
+</div>

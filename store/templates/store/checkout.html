@@ -1,0 +1,44 @@
+{% extends "store/base.html" %}
+{% block content %}
+<div class="checkout-wrap">
+  <div class="checkout-form-col">
+    <h1 class="page-title">📦 Delivery Details</h1>
+    <form method="post" class="checkout-form">
+      {% csrf_token %}
+      <label>Your Full Name
+        <input type="text" name="full_name" placeholder="e.g. Ramesh Kumar" required>
+      </label>
+      <label>Phone Number
+        <input type="tel" name="phone" placeholder="e.g. 98765 43210" required>
+      </label>
+      <label>Delivery Address
+        <textarea name="address" rows="3" placeholder="House no, street, area, city" required></textarea>
+      </label>
+      <label>Any note for delivery? (optional)
+        <input type="text" name="notes" placeholder="e.g. Ring the bell twice">
+      </label>
+
+      <div class="payment-box">
+        <h4>Payment Method</h4>
+        <label class="radio-row"><input type="radio" name="payment" checked> 💵 Cash on Delivery</label>
+      </div>
+
+      <button type="submit" class="btn btn-primary btn-lg btn-block">✅ Place Order</button>
+    </form>
+  </div>
+
+  <div class="checkout-summary-col">
+    <h3>Order Summary</h3>
+    {% for item in cart %}
+      <div class="summary-row">
+        <span>{{ item.product.name }} × {{ item.quantity }}</span>
+        <span>₹{{ item.subtotal }}</span>
+      </div>
+    {% endfor %}
+    <div class="summary-total">
+      <span>Total</span>
+      <strong>₹{{ cart.get_total }}</strong>
+    </div>
+  </div>
+</div>
+{% endblock %}

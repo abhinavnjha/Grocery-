@@ -1,0 +1,78 @@
+{% load static %}
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>{% block title %}FreshKart — Order groceries the easy way{% endblock %}</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Poppins:wght@600;700;800&family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="{% static 'css/style.css' %}">
+</head>
+<body>
+
+<header class="site-header">
+  <div class="header-inner">
+    <a href="{% url 'home' %}" class="logo">
+      <span class="logo-mark">🥬</span>
+      <span class="logo-text">Fresh<span>Kart</span></span>
+    </a>
+
+    <form action="{% url 'shop' %}" method="get" class="search-form">
+      <input type="text" name="q" placeholder="Search for atta, milk, fruits, soap..." value="{{ query|default:'' }}">
+      <button type="submit" aria-label="Search">🔍</button>
+    </form>
+
+    <a href="{% url 'cart_detail' %}" class="cart-link">
+      <span class="cart-icon">🛒</span>
+      <span class="cart-count">{{ nav_cart|length }}</span>
+      <span class="cart-label">Basket</span>
+    </a>
+  </div>
+  <div class="header-strip">
+    <a href="{% url 'shop' %}">🛍️ All Products</a>
+    <a href="{% url 'shop' %}?category=fruits-vegetables">🍎 Fruits &amp; Veg</a>
+    <a href="{% url 'shop' %}?category=dairy-bakery">🥛 Dairy &amp; Bakery</a>
+    <a href="{% url 'shop' %}?category=staples">🌾 Staples</a>
+    <a href="{% url 'shop' %}?category=snacks-beverages">🍪 Snacks</a>
+    <a href="{% url 'shop' %}?category=household">🧴 Household</a>
+  </div>
+</header>
+
+{% if messages %}
+<div class="messages-wrap">
+  {% for message in messages %}
+    <div class="flash flash-{{ message.tags }}">{{ message }}</div>
+  {% endfor %}
+</div>
+{% endif %}
+
+<main>
+  {% block content %}{% endblock %}
+</main>
+
+<footer class="site-footer">
+  <div class="footer-inner">
+    <div class="footer-col">
+      <div class="logo-text big">Fresh<span>Kart</span></div>
+      <p>Fresh groceries delivered to your door. Simple to use — just tap pictures, no typing needed.</p>
+    </div>
+    <div class="footer-col">
+      <h4>Shop</h4>
+      <a href="{% url 'shop' %}">All Products</a>
+      <a href="{% url 'cart_detail' %}">My Basket</a>
+    </div>
+    <div class="footer-col">
+      <h4>Help</h4>
+      <p>📞 Call us: 1800-123-456</p>
+      <p>🕒 Open daily: 7 AM – 11 PM</p>
+    </div>
+  </div>
+  <div class="footer-bottom">© {% now "Y" %} FreshKart. Made for everyone.</div>
+</footer>
+
+<div id="toast" class="toast"></div>
+<script src="{% static 'js/main.js' %}"></script>
+{% block extra_js %}{% endblock %}
+</body>
+</html>
