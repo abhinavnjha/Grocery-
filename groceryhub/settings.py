@@ -38,11 +38,20 @@ def get_env_list(name, default):
     return [item.strip() for item in value.split(',') if item.strip()]
 
 
-ALLOWED_HOSTS = get_env_list('ALLOWED_HOSTS', '127.0.0.1,localhost,*.vercel.app')
-if '*' in ALLOWED_HOSTS:
-    ALLOWED_HOSTS = ['*']
+if DEBUG:
+    ALLOWED_HOSTS = get_env_list('ALLOWED_HOSTS', '127.0.0.1,localhost')
+    CSRF_TRUSTED_ORIGINS = get_env_list('CSRF_TRUSTED_ORIGINS', 'http://localhost:8000,http://127.0.0.1:8000')
+else:
+    ALLOWED_HOSTS = get_env_list('ALLOWED_HOSTS', '')
+    if not ALLOWED_HOSTS:
+        ALLOWED_HOSTS = ['*']
+    else:
+        ALLOWED_HOSTS = ['*'] if '*' in ALLOWED_HOSTS else ALLOWED_HOSTS
 
-CSRF_TRUSTED_ORIGINS = get_env_list('CSRF_TRUSTED_ORIGINS', 'https://*.vercel.app')
+    CSRF_TRUSTED_ORIGINS = get_env_list('CSRF_TRUSTED_ORIGINS', 'https://*.vercel.app')
+    if not CSRF_TRUSTED_ORIGINS:
+        CSRF_TRUSTED_ORIGINS = ['https://*.vercel.app']
+
 SECURE_PROXY_SSL_HEADER = ('HTTP_X_FORWARDED_PROTO', 'https')
 USE_X_FORWARDED_HOST = True
 
