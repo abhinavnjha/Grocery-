@@ -105,9 +105,17 @@ WSGI_APPLICATION = 'groceryhub.wsgi.application'
 DATABASE_URL = os.getenv('DATABASE_URL', '').strip()
 
 if DATABASE_URL and not DATABASE_URL.startswith('<') and '<' not in DATABASE_URL:
-    DATABASES = {
-        'default': dj_database_url.parse(DATABASE_URL, conn_max_age=600)
-    }
+    try:
+        DATABASES = {
+            'default': dj_database_url.parse(DATABASE_URL, conn_max_age=600)
+        }
+    except Exception:
+        DATABASES = {
+            'default': {
+                'ENGINE': 'django.db.backends.sqlite3',
+                'NAME': BASE_DIR / 'db.sqlite3',
+            }
+        }
 else:
     DATABASES = {
         'default': {
