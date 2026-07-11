@@ -104,6 +104,8 @@ WSGI_APPLICATION = 'groceryhub.wsgi.application'
 
 DATABASE_URL = os.getenv('DATABASE_URL', '').strip()
 
+SQLITE_DB_PATH = Path('/tmp') / 'groceryhub.sqlite3'
+
 if DATABASE_URL and not DATABASE_URL.startswith('<') and '<' not in DATABASE_URL:
     try:
         DATABASES = {
@@ -113,14 +115,14 @@ if DATABASE_URL and not DATABASE_URL.startswith('<') and '<' not in DATABASE_URL
         DATABASES = {
             'default': {
                 'ENGINE': 'django.db.backends.sqlite3',
-                'NAME': BASE_DIR / 'db.sqlite3',
+                'NAME': SQLITE_DB_PATH,
             }
         }
 else:
     DATABASES = {
         'default': {
             'ENGINE': 'django.db.backends.sqlite3',
-            'NAME': BASE_DIR / 'db.sqlite3',
+            'NAME': SQLITE_DB_PATH,
         }
     }
 
