@@ -1,16 +1,18 @@
-"""
-WSGI config for groceryhub project.
-
-It exposes the WSGI callable as a module-level variable named ``application``.
-
-For more information on this file, see
-https://docs.djangoproject.com/en/6.0/howto/deployment/wsgi/
-"""
-
 import os
-
+import django
 from django.core.wsgi import get_wsgi_application
 
 os.environ.setdefault('DJANGO_SETTINGS_MODULE', 'groceryhub.settings')
 
-application = get_wsgi_application()
+# Auto-setup on cold start
+django.setup()
+
+try:
+    from django.core.management import call_command
+    call_command('migrate', '--run-syncdb', verbosity=0)
+    call_command('collectstatic', '--noinput', verbosity=0)
+    call_command('seed_store', verbosity=0)
+except Exception as e:
+    print(f"Setup warning: {e}")
+
+app = get_wsgi_application()
