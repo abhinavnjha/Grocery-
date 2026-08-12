@@ -2,15 +2,18 @@
   "version": 2,
   "builds": [
     {
-      "src": "api/index.py",
+      "src": "groceryhub/wsgi.py",
       "use": "@vercel/python"
     }
   ],
   "routes": [
     {
+      "src": "/static/(.*)",
+      "dest": "/static/$1"
+    },
+    {
       "src": "/(.*)",
-      "dest": "api/index.py"
+      "dest": "groceryhub/wsgi.py"
     }
-  ],
-  "buildCommand": "pip install -r requirements.txt && python manage.py collectstatic --noinput && python manage.py migrate"
+  ]
 }
