@@ -2,8 +2,8 @@
 {% block content %}
 <div class="product-detail">
   <div class="pd-image">
-    {% if product.photo %}
-      <img src="{{ product.photo }}" alt="{{ product.name }}">
+    {% if product.image %}
+      <img src="{{ product.image.url }}" alt="{{ product.name }}">
     {% else %}
       <span class="pd-emoji">{{ product.emoji }}</span>
     {% endif %}
@@ -53,6 +53,7 @@
   </div>
 </section>
 {% endif %}
+
 {% endblock %}
 
 {% block extra_js %}

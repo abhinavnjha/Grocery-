@@ -23,13 +23,8 @@
   <div class="category-grid">
     {% for cat in categories %}
     <a href="{% url 'shop' %}?category={{ cat.slug }}" class="category-card">
-      {% if cat.image_url %}
-        <div class="category-card-bg" style="background-image:url('{{ cat.image_url }}')"></div>
-      {% endif %}
-      <div class="category-card-body">
-        <span class="category-icon">{{ cat.icon }}</span>
-        <span class="category-name">{{ cat.name }}</span>
-      </div>
+      <span class="category-icon">{{ cat.icon }}</span>
+      <span class="category-name">{{ cat.name }}</span>
     </a>
     {% endfor %}
   </div>
@@ -58,7 +53,7 @@
 <section class="trust-strip">
   <div class="trust-item"><span>🚚</span><p>Fast delivery</p></div>
   <div class="trust-item"><span>💰</span><p>Cash on delivery</p></div>
-  <div class="trust-item"><span>✅</span><p>Fresh quality</p></div>
+  <div class="trust-item"><span>✅</span><p>Fresh, quality checked</p></div>
   <div class="trust-item"><span>↩️</span><p>Easy returns</p></div>
 </section>
 

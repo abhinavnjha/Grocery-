@@ -1,6 +1,4 @@
-Django==6.0.2
-dj-database-url==3.1.2
-python-dotenv==1.2.2
-psycopg[binary]==3.3.4
-Pillow==12.2.0
-gunicorn==23.0.0
+Django>=4.2,<7.0
+djangorestframework>=3.14
+mysqlclient>=2.1
+djoser>=2.2

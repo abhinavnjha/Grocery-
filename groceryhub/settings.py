@@ -10,50 +10,22 @@ For the full list of settings and their values, see
 https://docs.djangoproject.com/en/6.0/ref/settings/
 """
 
-import os
 from pathlib import Path
-
-import dj_database_url
-from dotenv import load_dotenv
 
 # Build paths inside the project like this: BASE_DIR / 'subdir'.
 BASE_DIR = Path(__file__).resolve().parent.parent
-load_dotenv(BASE_DIR / '.env')
 
 
 # Quick-start development settings - unsuitable for production
 # See https://docs.djangoproject.com/en/6.0/howto/deployment/checklist/
 
 # SECURITY WARNING: keep the secret key used in production secret!
-SECRET_KEY = os.getenv('SECRET_KEY', 'django-insecure-y6#51$&u^#1^wbbdqp-x$d+1ypys87+!n_nlj!*&6)w*=ps4(x')
+SECRET_KEY = 'django-insecure-y6#51$&u^#1^wbbdqp-x$d+1ypys87+!n_nlj!*&6)w*=ps4(x'
 
 # SECURITY WARNING: don't run with debug turned on in production!
-DEBUG = os.getenv('DEBUG', 'False').lower() in {'1', 'true', 'yes', 'on'}
+DEBUG = True
 
-
-def get_env_list(name, default):
-    value = os.getenv(name, default)
-    if not value:
-        return []
-    return [item.strip() for item in value.split(',') if item.strip()]
-
-
-if DEBUG:
-    ALLOWED_HOSTS = get_env_list('ALLOWED_HOSTS', '127.0.0.1,localhost')
-    CSRF_TRUSTED_ORIGINS = get_env_list('CSRF_TRUSTED_ORIGINS', 'http://localhost:8000,http://127.0.0.1:8000')
-else:
-    ALLOWED_HOSTS = get_env_list('ALLOWED_HOSTS', '')
-    if not ALLOWED_HOSTS:
-        ALLOWED_HOSTS = ['*']
-    else:
-        ALLOWED_HOSTS = ['*'] if '*' in ALLOWED_HOSTS else ALLOWED_HOSTS
-
-    CSRF_TRUSTED_ORIGINS = get_env_list('CSRF_TRUSTED_ORIGINS', 'https://*.vercel.app')
-    if not CSRF_TRUSTED_ORIGINS:
-        CSRF_TRUSTED_ORIGINS = ['https://*.vercel.app']
-
-SECURE_PROXY_SSL_HEADER = ('HTTP_X_FORWARDED_PROTO', 'https')
-USE_X_FORWARDED_HOST = True
+ALLOWED_HOSTS = ['*']
 
 
 # Application definition
@@ -65,6 +37,12 @@ INSTALLED_APPS = [
     'django.contrib.sessions',
     'django.contrib.messages',
     'django.contrib.staticfiles',
+
+    # Third-party
+    'rest_framework',
+    'rest_framework.authtoken',
+    'djoser',
+
     'store',
 ]
 
@@ -102,29 +80,12 @@ WSGI_APPLICATION = 'groceryhub.wsgi.application'
 # Database
 # https://docs.djangoproject.com/en/6.0/ref/settings/#databases
 
-DATABASE_URL = os.getenv('DATABASE_URL', '').strip()
-
-SQLITE_DB_PATH = Path('/tmp') / 'groceryhub.sqlite3'
-
-if DATABASE_URL and not DATABASE_URL.startswith('<') and '<' not in DATABASE_URL:
-    try:
-        DATABASES = {
-            'default': dj_database_url.parse(DATABASE_URL, conn_max_age=600)
-        }
-    except Exception:
-        DATABASES = {
-            'default': {
-                'ENGINE': 'django.db.backends.sqlite3',
-                'NAME': SQLITE_DB_PATH,
-            }
-        }
-else:
-    DATABASES = {
-        'default': {
-            'ENGINE': 'django.db.backends.sqlite3',
-            'NAME': SQLITE_DB_PATH,
-        }
+DATABASES = {
+    'default': {
+        'ENGINE': 'django.db.backends.sqlite3',
+        'NAME': BASE_DIR / 'db.sqlite3',
     }
+}
 
 
 # Password validation
@@ -161,12 +122,27 @@ USE_TZ = True
 # Static files (CSS, JavaScript, Images)
 # https://docs.djangoproject.com/en/6.0/howto/static-files/
 
-STATIC_URL = '/static/'
+STATIC_URL = 'static/'
 STATICFILES_DIRS = [BASE_DIR / 'static']
-STATIC_ROOT = BASE_DIR / 'staticfiles'
 
-MEDIA_URL = '/media/'
+MEDIA_URL = 'media/'
 MEDIA_ROOT = BASE_DIR / 'media'
 
 DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
+
+# Django REST Framework
+REST_FRAMEWORK = {
+    'DEFAULT_AUTHENTICATION_CLASSES': [
+        'rest_framework.authentication.TokenAuthentication',
+        'rest_framework.authentication.SessionAuthentication',
+    ],
+    'DEFAULT_PERMISSION_CLASSES': [
+        'rest_framework.permissions.IsAuthenticatedOrReadOnly',
+    ],
+}
+
+# Djoser
+DJOSER = {
+    'LOGIN_FIELD': 'username',
+}
 

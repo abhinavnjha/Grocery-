@@ -1,8 +1,8 @@
 <div class="product-card">
   {% if product.discount_percent %}<span class="badge-discount">-{{ product.discount_percent }}%</span>{% endif %}
   <a href="{% url 'product_detail' product.slug %}" class="product-thumb">
-    {% if product.photo %}
-      <img src="{{ product.photo }}" alt="{{ product.name }}" loading="lazy">
+    {% if product.image %}
+      <img src="{{ product.image.url }}" alt="{{ product.name }}">
     {% else %}
       <span class="product-emoji">{{ product.emoji }}</span>
     {% endif %}
@@ -19,7 +19,7 @@
       <input type="hidden" name="quantity" value="1">
       <input type="hidden" name="next" value="{{ request.get_full_path }}">
       <button type="submit" class="btn-add" {% if not product.in_stock %}disabled{% endif %}>
-        {% if product.in_stock %}+ Add{% else %}Out{% endif %}
+        {% if product.in_stock %}+ Add{% else %}Out of stock{% endif %}
       </button>
     </form>
   </div>
